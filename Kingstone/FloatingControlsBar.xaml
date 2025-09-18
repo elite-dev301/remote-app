@@ -1,0 +1,164 @@
+﻿<UserControl x:Class="Kingstone.FloatingControlsBar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Kingstone"
+             mc:Ignorable="d" 
+             d:DesignHeight="850" d:DesignWidth="300">
+    <Border Background="#E0F0F0F0" 
+            CornerRadius="8,0,0,8"
+            BorderBrush="Gray" 
+            BorderThickness="1,1,0,1"
+            Effect="{DynamicResource DropShadow}">
+        <Border.Resources>
+            <DropShadowEffect x:Key="DropShadow" 
+                              BlurRadius="10" 
+                              ShadowDepth="5" 
+                              Opacity="0.3"/>
+        </Border.Resources>
+
+        <StackPanel Margin="15">
+
+            <!-- Camera Selection -->
+            <GroupBox Header="Camera" Padding="8">
+                <ComboBox x:Name="CameraComboBox" 
+                          Height="25"
+                          SelectionChanged="CameraComboBox_SelectionChanged"/>
+            </GroupBox>
+
+            <!-- USB-COM Port Selection -->
+            <GroupBox Header="USB-COM Port" Padding="8">
+                <StackPanel>
+                    <ComboBox x:Name="ComPortComboBox" 
+                              Height="25"
+                              Margin="0,0,0,5" SelectionChanged="ComPortComboBox_SelectionChanged"/>
+                    <Button x:Name="RefreshPortsButton"
+                            Content="🔄 Refresh Ports"
+                            Height="25"
+                            Click="RefreshPortsButton_Click"/>
+                </StackPanel>
+            </GroupBox>
+
+            <!-- Start/Stop Control -->
+            <GroupBox Header="Control" Padding="8">
+                <Button x:Name="StartStopButton"
+                        Content="▶ Start"
+                        Height="35"
+                        FontSize="14"
+                        FontWeight="Bold"
+                        Click="StartStopButton_Click"/>
+            </GroupBox>
+
+            <!-- Scroll Sensitivity Control -->
+            <GroupBox Header="Scroll Sensitivity" Padding="8">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="40"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Label -->
+                    <TextBlock Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2"
+                               Text="Adjust mouse wheel sensitivity"
+                               FontSize="10"
+                               Foreground="Gray"
+                               Margin="0,0,0,5"/>
+
+                    <!-- Slider -->
+                    <Slider x:Name="ScrollSensitivitySlider"
+                            Grid.Column="0" Grid.Row="1"
+                            Minimum="1"
+                            Maximum="10"
+                            Value="5"
+                            TickPlacement="BottomRight"
+                            TickFrequency="1"
+                            IsSnapToTickEnabled="True"
+                            ValueChanged="ScrollSensitivitySlider_ValueChanged"
+                            VerticalAlignment="Center"/>
+
+                    <!-- Value Display -->
+                    <TextBlock x:Name="ScrollSensitivityValue"
+                               Grid.Column="1" Grid.Row="1"
+                               Text="5"
+                               FontWeight="Bold"
+                               FontSize="14"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Foreground="DarkBlue"/>
+
+                    <!-- Min/Max Labels -->
+                    <Grid Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Margin="0,5,0,0">
+                        <TextBlock Text="Slow" FontSize="9" Foreground="Gray" HorizontalAlignment="Left"/>
+                        <TextBlock Text="Fast" FontSize="9" Foreground="Gray" HorizontalAlignment="Right"/>
+                    </Grid>
+                </Grid>
+            </GroupBox>
+
+            <!-- Hotkey Send -->
+            <GroupBox Header="Send Hotkey" Padding="8">
+                <StackPanel>
+                    <ComboBox x:Name="HotkeyComboBox" 
+                              Height="25"
+                              Margin="0,0,0,5">
+                        <ComboBoxItem Content="Ctrl+Alt+Del" Tag="8082"/>
+                        <ComboBoxItem Content="Print Screen" Tag="PrintScreen"/>
+                    </ComboBox>
+                    <Button x:Name="SendHotkeyButton"
+                            Content="📤 Send Hotkey"
+                            Height="25"
+                            Click="SendHotkeyButton_Click"/>
+                </StackPanel>
+            </GroupBox>
+
+            <!-- Position Control -->
+            <GroupBox Header="Camera Resolution (Width, Height)" Padding="8" Visibility="Collapsed">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="5"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBox x:Name="WidthResolutionTextBox" 
+                             Grid.Column="0" Grid.Row="0"
+                             Height="25"
+                             Text="0.0"
+                             TextAlignment="Center"/>
+
+                    <TextBox x:Name="HeightResolutionTextBox" 
+                             Grid.Column="2" Grid.Row="0"
+                             Height="25"
+                             Text="0.0"
+                             TextAlignment="Center"/>
+
+                    <Button x:Name="SetResolutionButton"
+                            Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3"
+                            Content="📍 Set Resolution"
+                            Height="25"
+                            Click="SetResolutionButton_Click"/>
+                </Grid>
+            </GroupBox>
+
+            <!-- Status -->
+            <GroupBox Header="Status" Padding="8">
+                <TextBlock x:Name="StatusTextBlock"
+                           Text="Ready"
+                           Foreground="DarkGreen"
+                           FontWeight="SemiBold"
+                           TextAlignment="Center" TextWrapping="Wrap"/>
+            </GroupBox>
+
+        </StackPanel>
+    </Border>
+</UserControl>
