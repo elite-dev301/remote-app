@@ -155,22 +155,37 @@ namespace Kingstone.utils
             {
                 try
                 {
-                    if (messageQueue.TryDequeue(out ComPortMessage message) &&
-                        isConnected &&
-                        serialPort?.IsOpen == true)
+                    if (!isConnected || serialPort?.IsOpen == false) continue;
+
+                    ComPortMessage mouseMessage = null, lastMessage = null;
+
+                    while (messageQueue.TryDequeue(out lastMessage) && lastMessage.Command[0] == 0x11)
                     {
-                        // Send the message
-                        await SendMessageAsync(message);
                         Interlocked.Decrement(ref messagesInQueue);
-                        Interlocked.Increment(ref totalMessagesSent);
+                        mouseMessage = lastMessage;
+                    }
 
-                        // Notify message sent
-                        MessageSent?.Invoke(this, message);
+                    if (mouseMessage != null || lastMessage != null)
+                    {
+                        ComPortMessage[] messages = new ComPortMessage[] { mouseMessage, lastMessage };
 
-                        Console.WriteLine($"Remain messages: {messagesInQueue}");
+                        foreach (ComPortMessage message in messages) {
 
-                        // Small delay to prevent overwhelming the receiving device
-                        await Task.Delay(1, cancellationTokenSource.Token);
+                            if (message == null) continue;
+
+                            // Send the message
+                            await SendMessageAsync(message);
+                            Interlocked.Decrement(ref messagesInQueue);
+                            Interlocked.Increment(ref totalMessagesSent);
+
+                            // Notify message sent
+                            MessageSent?.Invoke(this, message);
+
+                            Console.WriteLine($"Remain messages: {messagesInQueue}");
+
+                            // Small delay to prevent overwhelming the receiving device
+                            await Task.Delay(1, cancellationTokenSource.Token);
+                        }
                     }
                     else
                     {
