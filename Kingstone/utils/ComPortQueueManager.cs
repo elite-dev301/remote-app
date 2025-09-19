@@ -71,7 +71,7 @@ namespace Kingstone.utils
 
                 StatusChanged?.Invoke(this, $"Connected to {portName}");
                 ConnectionChanged?.Invoke(this, true);
-                Debug.WriteLine($"COM port connected: {portName}");
+                Console.WriteLine($"COM port connected: {portName}");
 
                 return true;
             }
@@ -80,7 +80,7 @@ namespace Kingstone.utils
                 string errorMsg = $"Connection failed: {ex.Message}";
                 StatusChanged?.Invoke(this, errorMsg);
                 ConnectionChanged?.Invoke(this, false);
-                Debug.WriteLine($"COM port connection error: {ex}");
+                Console.WriteLine($"COM port connection error: {ex}");
                 return false;
             }
         }
@@ -97,7 +97,7 @@ namespace Kingstone.utils
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Disconnect error: {ex}");
+                Console.WriteLine($"Disconnect error: {ex}");
             }
 
             try { 
@@ -118,11 +118,11 @@ namespace Kingstone.utils
 
                 StatusChanged?.Invoke(this, "Disconnected");
                 ConnectionChanged?.Invoke(this, false);
-                Debug.WriteLine("COM port disconnected");
+                Console.WriteLine("COM port disconnected");
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Disconnect error: {ex}");
+                Console.WriteLine($"Disconnect error: {ex}");
             }
         }
 
@@ -138,18 +138,18 @@ namespace Kingstone.utils
                 for (int i = 0; i < count; i++) { messageQueue.Enqueue(message); }
                 Interlocked.Increment(ref messagesInQueue);
                 Interlocked.Increment(ref totalMessagesQueued);
-
+                if (command[0] == 0x33) Console.WriteLine($"Key Code Queue: {command[4]} ({messagesInQueue})");
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error queuing message: {ex}");
+                Console.WriteLine($"Error queuing message: {ex}");
             }
         }
 
         // Background worker thread
         private async Task ProcessMessageQueue()
         {
-            Debug.WriteLine("COM port message queue worker started");
+            Console.WriteLine("COM port message queue worker started");
 
             while (!cancellationTokenSource.Token.IsCancellationRequested)
             {
@@ -167,6 +167,8 @@ namespace Kingstone.utils
                         // Notify message sent
                         MessageSent?.Invoke(this, message);
 
+                        Console.WriteLine($"Remain messages: {messagesInQueue}");
+
                         // Small delay to prevent overwhelming the receiving device
                         await Task.Delay(1, cancellationTokenSource.Token);
                     }
@@ -183,7 +185,7 @@ namespace Kingstone.utils
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Message queue worker error: {ex}");
+                    Console.WriteLine($"Message queue worker error: {ex}");
                     SendError?.Invoke(this, ex);
 
                     // Brief delay on error to prevent tight error loops
@@ -191,7 +193,7 @@ namespace Kingstone.utils
                 }
             }
 
-            Debug.WriteLine("COM port message queue worker stopped");
+            Console.WriteLine("COM port message queue worker stopped");
         }
 
         private async Task SendMessageAsync(ComPortMessage message)
@@ -204,12 +206,10 @@ namespace Kingstone.utils
                 byte[] data = message.Command;
                 await serialPort.BaseStream.WriteAsync(data, 0, data.Length, cancellationTokenSource.Token);
                 await serialPort.BaseStream.FlushAsync(cancellationTokenSource.Token);
-
-                Debug.WriteLine($"Sent: {message.Command}");
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Send error: {ex}");
+                Console.WriteLine($"Send error: {ex}");
                 throw; // Re-throw to be handled by caller
             }
         }
@@ -230,11 +230,9 @@ namespace Kingstone.utils
             QueueMessage(data, 1); // Normal priority
         }
 
-        const double scaleX = 17.27, scaleY = 33.25;
-
         public void QueueMouseEvent(MouseEvent eventType, System.Windows.Point pos, int scroll = 1)
         {
-            int x = (int)(pos.X * scaleX), y = (int)(pos.Y * scaleY);
+            int x = (int)(pos.X), y = (int)(pos.Y);
             byte[] data = new byte[6];
 
             data[1] = (byte)(x & 0xFF);
@@ -257,12 +255,12 @@ namespace Kingstone.utils
                     data[5] = 0x01;
                     break;
                 case MouseEvent.RDown:
-                    data[0] = 0x33;
-                    data[5] = 0x00;
+                    data[0] = 0x22;
+                    data[5] = 0x02;
                     break;
                 case MouseEvent.RUp:
-                    data[0] = 0x33;
-                    data[5] = 0x01;
+                    data[0] = 0x22;
+                    data[5] = 0x03;
                     break;
                 case MouseEvent.Scroll:
                     data[0] = 0x44;
@@ -294,7 +292,7 @@ namespace Kingstone.utils
                 Disconnect();
                 cancellationTokenSource?.Dispose();
                 disposed = true;
-                Debug.WriteLine("ComPortQueueManager disposed");
+                Console.WriteLine("ComPortQueueManager disposed");
             }
         }
 

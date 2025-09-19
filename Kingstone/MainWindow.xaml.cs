@@ -26,8 +26,6 @@ namespace Kingstone
         private bool isSystemActive = false;
         private int scrollSensitive = 5;
 
-        private Size? cameraSize = null;
-
         public MainWindow()
         {
             InitializeComponent();
@@ -69,11 +67,14 @@ namespace Kingstone
 
         private void ComPortQueueManager_MessageSent(object? sender, ComPortMessage e)
         {
+
+            if (e.Command[0] != 0x33) return;
+
             string str = "";
 
             for (int i = 0; i < e.Command.Length; i ++) str += e.Command[i].ToString("X2") + " ";
 
-            Debug.WriteLine($"Send Command: {str}");
+            Console.WriteLine($"Send Command: {str}");
         }
 
         private void LoadSettings()
@@ -190,11 +191,6 @@ namespace Kingstone
                     isSystemActive = true;
                     FloatingControls.SetStartStopState(true);
                     FloatingControls.SetStatus("System Active - Input Intercepted");
-
-                    if (CameraImage.Source is BitmapImage)
-                    {
-                        cameraSize = new Size((CameraImage.Source as BitmapImage).Width, (CameraImage.Source as BitmapImage).Height);
-                    }
                 }
             }
             else
@@ -313,21 +309,10 @@ namespace Kingstone
                 double controlWidth = CameraImage.ActualWidth;
                 double controlHeight = CameraImage.ActualHeight;
 
-                if (controlWidth == 0 || controlHeight == 0 || cameraSize == null)
+                if (controlWidth == 0 || controlHeight == 0)
                     return new System.Windows.Point(0, 0);
 
-                // Calculate aspect ratios
-                double scaleFactor = cameraSize.Value.Width / controlWidth;
-
-                // Convert mouse position to image coordinates
-                double imageX = mousePosition.X * scaleFactor;
-                double imageY = mousePosition.Y * scaleFactor;
-
-                // Clamp to image bounds
-                imageX = Math.Max(0, Math.Min(cameraSize.Value.Width, imageX));
-                imageY = Math.Max(0, Math.Min(cameraSize.Value.Height, imageY));
-
-                return new System.Windows.Point(imageX, imageY);
+                return new System.Windows.Point(mousePosition.X / controlWidth * 0x7FFF, mousePosition.Y / controlHeight * 0x7FFF);
             }
             catch (Exception ex)
             {
@@ -337,7 +322,7 @@ namespace Kingstone
 
         private void CameraImage_MouseMove(object sender, MouseEventArgs e)
         {
-            // Debug.WriteLine($"Mouse Move {e.GetPosition(CameraImage).X}, {e.GetPosition(CameraImage).Y}");
+            // Console.WriteLine($"Mouse Move {e.GetPosition(CameraImage).X}, {e.GetPosition(CameraImage).Y}");
 
             if (!isSystemActive || !comPortQueueManager.IsConnected || isControlsVisible) return;
 

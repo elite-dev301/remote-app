@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Windows;
 using System.Windows.Interop;
 
@@ -30,6 +31,16 @@ public class CompleteKeyInterceptor
         public int time;
         public IntPtr dwExtraInfo;
     }
+
+    [DllImport("user32.dll")]
+    private static extern int ToAscii(int uVirtKey, int uScanCode, byte[] lpKeyState,
+                                         [Out] StringBuilder lpChar, uint uFlags);
+
+    [DllImport("user32.dll")]
+    private static extern bool GetKeyboardState(byte[] lpKeyState);
+
+    [DllImport("user32.dll")]
+    private static extern int MapVirtualKey(int uCode, uint uMapType);
 
     [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
     private static extern IntPtr SetWindowsHookEx(int idHook,
@@ -86,6 +97,87 @@ public class CompleteKeyInterceptor
         return foregroundProcessId == currentProcessId;
     }
 
+    private static readonly Dictionary<int, int> VkToHidMap = new Dictionary<int, int>();
+
+    public CompleteKeyInterceptor()
+    {
+        InitializeMappingTable();
+    }
+    private static void InitializeMappingTable()
+    {
+        // Raw data from the provided table
+        int[] rawData = {
+            0xA2, 0x80,  // Left Control
+            0xA0, 0x81,  // Left Shift
+            0xA4, 0x82,  // Left Alt
+            91, 0x83,    // Left Windows Key
+            163, 0x84,   // Right Control (0xA3, but stored as signed: 163 = 0xA3)
+            161, 0x85,   // Right Shift (0xA1, but stored as signed: 161 = 0xA1)
+            165, 0x86,   // Right Alt (0xA5, but stored as signed: 165 = 0xA5)
+            92, 0x87,    // Right Windows Key
+            9, 0xB3,     // Tab
+            20, 0xC1,    // Caps Lock (20 = 0x14, 0xC1 = -63 as signed byte)
+            8, 0xB2,     // Backspace (0xB2 = -78 as signed byte)
+            13, 0xB0,    // Enter (0xB0 = -80 as signed byte)
+            93, 0xED,    // Apps/Menu Key (0xED = -19 as signed byte)
+            45, 0xD1,    // Insert (0xD1 = -47 as signed byte)
+            46, 0xD4,    // Delete (0xD4 = -44 as signed byte)
+            36, 0xD2,    // Home (0xD2 = -46 as signed byte)
+            35, 0xD5,    // End (0xD5 = -43 as signed byte)
+            33, 0xD3,    // Page Up (0xD3 = -45 as signed byte)
+            34, 0xD6,    // Page Down (0xD6 = -42 as signed byte)
+            38, 0xDA,    // Up Arrow (0xDA = -38 as signed byte)
+            40, 0xD9,    // Down Arrow (0xD9 = -39 as signed byte)
+            37, 0xD8,    // Left Arrow (0xD8 = -40 as signed byte)
+            39, 0xD7,    // Right Arrow (0xD7 = -41 as signed byte)
+            144, 0xDB,   // Num Lock (144 = 0x90, 0xDB = -37 as signed byte)
+            97, 0xE1,    // Numpad 1 (0xE1 = -31 as signed byte)
+            98, 0xE2,    // Numpad 2 (0xE2 = -30 as signed byte)
+            99, 0xE3,    // Numpad 3 (0xE3 = -29 as signed byte)
+            100, 0xE4,   // Numpad 4 (0xE4 = -28 as signed byte)
+            101, 0xE5,   // Numpad 5 (0xE5 = -27 as signed byte)
+            102, 0xE6,   // Numpad 6 (0xE6 = -26 as signed byte)
+            103, 0xE7,   // Numpad 7 (0xE7 = -25 as signed byte)
+            104, 0xE8,   // Numpad 8 (0xE8 = -24 as signed byte)
+            105, 0xE9,   // Numpad 9 (0xE9 = -23 as signed byte)
+            96, 0xEA,    // Numpad 0 (0xEA = -22 as signed byte)
+            27, 0xB1,    // Escape (0xB1 = -79 as signed byte)
+            112, 0xC2,   // F1 (0xC2 = -62 as signed byte)
+            113, 0xC3,   // F2 (0xC3 = -61 as signed byte)
+            114, 0xC4,   // F3 (0xC4 = -60 as signed byte)
+            115, 0xC5,   // F4 (0xC5 = -59 as signed byte)
+            116, 0xC6,   // F5 (0xC6 = -58 as signed byte)
+            117, 0xC7,   // F6 (0xC7 = -57 as signed byte)
+            118, 0xC8,   // F7 (0xC8 = -56 as signed byte)
+            119, 0xC9,   // F8 (0xC9 = -55 as signed byte)
+            120, 0xCA,   // F9 (0xCA = -54 as signed byte)
+            121, 0xCB,   // F10 (0xCB = -53 as signed byte)
+            122, 0xCC,   // F11 (0xCC = -52 as signed byte)
+            123, 0xCD,   // F12 (0xCD = -51 as signed byte)
+            124, 0xF0,   // F13 (0xF0 = -16 as signed byte)
+            125, 0xF1,   // F14 (0xF1 = -15 as signed byte)
+            126, 0xF2,   // F15 (0xF2 = -14 as signed byte)
+            127, 0xF3,   // F16 (0xF3 = -13 as signed byte)
+            128, 0xF4,   // F17 (0xF4 = -12 as signed byte)
+            129, 0xF5,   // F18 (0xF5 = -11 as signed byte)
+            130, 0xF6,   // F19 (0x82 = 130, 0xF6)
+            131, 0xF7,   // F20 (0x83 = 131, 0xF7)
+            132, 0xF8,   // F21 (0xF8 = -8 as signed byte)
+            133, 0xF9,   // F22 (0xF9 = -7 as signed byte)
+            134, 0xFA,   // F23 (0xFA = -6 as signed byte)
+            135, 0xFB,   // F24 (0xFB = -5 as signed byte)
+            44, 0xCE,    // Print Screen (0xCE = -50 as signed byte)
+            145, 0xCF,   // Scroll Lock (145 = 0x91, 0xCF)
+            19, 0xD0     // Pause (0x13 = 19, 0xD0)
+        };
+
+        // Convert signed bytes to proper byte values and populate dictionary
+        for (int i = 0; i < rawData.Length; i += 2)
+        {
+            VkToHidMap[rawData[i]] = rawData[i + 1];
+        }
+    }
+
     private static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
     {
         if (nCode >= 0)
@@ -97,6 +189,29 @@ public class CompleteKeyInterceptor
 
             KBDLLHOOKSTRUCT keyInfo = (KBDLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(KBDLLHOOKSTRUCT));
             int vkCode = keyInfo.vkCode;
+
+            byte[] keyboardState = new byte[256];
+            if (!GetKeyboardState(keyboardState))
+            {
+                Console.WriteLine("Failed to get keyboard state");
+                return CallNextHookEx(_hookID, nCode, wParam, lParam);
+            }
+
+            Console.WriteLine($"Prev vkCode: {vkCode.ToString("X2")}");
+
+            if (VkToHidMap.TryGetValue(vkCode, out int hidCode))
+            {
+                vkCode = hidCode;
+                Console.WriteLine($"HID vkCode: {vkCode.ToString("X2")}");
+            } else {
+                StringBuilder asciiBuffer = new StringBuilder(2);
+                if (ToAscii(keyInfo.vkCode, keyInfo.scanCode, keyboardState, asciiBuffer, 0) == 1)
+                {
+                    vkCode = (int)asciiBuffer[0];
+
+                    Console.WriteLine($"Ascii vkCode: {vkCode.ToString("X2")}");
+                }
+            }
 
             bool isKeyDown = false;
             bool isSystemKey = false;
@@ -120,6 +235,8 @@ public class CompleteKeyInterceptor
                     isSystemKey = true;
                     break;
             }
+
+            Console.WriteLine("Invoked: " + vkCode.ToString("X2"));
 
             _instance?.KeyEvent?.Invoke(vkCode, isKeyDown, isSystemKey);
 

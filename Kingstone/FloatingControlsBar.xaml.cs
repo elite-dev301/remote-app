@@ -31,7 +31,7 @@ namespace Kingstone
 
         private bool isStarted = false;
 
-        private int scrollSensitivity = 5; // Default value
+        private int scrollSensitivity = 3; // Default value
 
         public int ScrollSensitivity => scrollSensitivity;
 
