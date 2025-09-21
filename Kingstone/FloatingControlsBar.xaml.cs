@@ -38,8 +38,8 @@ namespace Kingstone
         public FloatingControlsBar()
         {
             InitializeComponent();
-            LoadSettings();
             RefreshComPorts();
+            LoadSettings();
         }
 
         private void LoadSettings()
@@ -207,9 +207,6 @@ namespace Kingstone
 
             // Notify about the change
             ScrollSensitivityChanged?.Invoke(this, scrollSensitivity);
-
-            // Auto-save settings
-            SaveSettings();
 
             // Update status
             SetStatus($"Scroll sensitivity set to {scrollSensitivity}");
