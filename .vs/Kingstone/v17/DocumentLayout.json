@@ -3,6 +3,22 @@
   "WorkspaceRootPath": "E:\\Projects\\Kingstone\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{98D78EDC-F3AB-4D95-8656-120A00950F26}|Kingstone\\Kingstone.csproj|e:\\projects\\kingstone\\kingstone\\utils\\cameravideodisplay.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98D78EDC-F3AB-4D95-8656-120A00950F26}|Kingstone\\Kingstone.csproj|solutionrelative:kingstone\\utils\\cameravideodisplay.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98D78EDC-F3AB-4D95-8656-120A00950F26}|Kingstone\\Kingstone.csproj|e:\\projects\\kingstone\\kingstone\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98D78EDC-F3AB-4D95-8656-120A00950F26}|Kingstone\\Kingstone.csproj|solutionrelative:kingstone\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98D78EDC-F3AB-4D95-8656-120A00950F26}|Kingstone\\Kingstone.csproj|e:\\projects\\kingstone\\kingstone\\floatingcontrolsbar.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{98D78EDC-F3AB-4D95-8656-120A00950F26}|Kingstone\\Kingstone.csproj|solutionrelative:kingstone\\floatingcontrolsbar.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98D78EDC-F3AB-4D95-8656-120A00950F26}|Kingstone\\Kingstone.csproj|e:\\projects\\kingstone\\kingstone\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{98D78EDC-F3AB-4D95-8656-120A00950F26}|Kingstone\\Kingstone.csproj|solutionrelative:kingstone\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{98D78EDC-F3AB-4D95-8656-120A00950F26}|Kingstone\\Kingstone.csproj|e:\\projects\\kingstone\\kingstone\\utils\\completekeyinterceptor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{98D78EDC-F3AB-4D95-8656-120A00950F26}|Kingstone\\Kingstone.csproj|solutionrelative:kingstone\\utils\\completekeyinterceptor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -11,24 +27,8 @@
       "RelativeMoniker": "D:0:0:{98D78EDC-F3AB-4D95-8656-120A00950F26}|Kingstone\\Kingstone.csproj|solutionrelative:kingstone\\utils\\completeinputinterceptor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{98D78EDC-F3AB-4D95-8656-120A00950F26}|Kingstone\\Kingstone.csproj|e:\\projects\\kingstone\\kingstone\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{98D78EDC-F3AB-4D95-8656-120A00950F26}|Kingstone\\Kingstone.csproj|solutionrelative:kingstone\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{98D78EDC-F3AB-4D95-8656-120A00950F26}|Kingstone\\Kingstone.csproj|e:\\projects\\kingstone\\kingstone\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{98D78EDC-F3AB-4D95-8656-120A00950F26}|Kingstone\\Kingstone.csproj|solutionrelative:kingstone\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{98D78EDC-F3AB-4D95-8656-120A00950F26}|Kingstone\\Kingstone.csproj|e:\\projects\\kingstone\\kingstone\\utils\\cameravideodisplay.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{98D78EDC-F3AB-4D95-8656-120A00950F26}|Kingstone\\Kingstone.csproj|solutionrelative:kingstone\\utils\\cameravideodisplay.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{98D78EDC-F3AB-4D95-8656-120A00950F26}|Kingstone\\Kingstone.csproj|e:\\projects\\kingstone\\kingstone\\kingstone.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
       "RelativeMoniker": "D:0:0:{98D78EDC-F3AB-4D95-8656-120A00950F26}|Kingstone\\Kingstone.csproj|solutionrelative:kingstone\\kingstone.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{98D78EDC-F3AB-4D95-8656-120A00950F26}|Kingstone\\Kingstone.csproj|e:\\projects\\kingstone\\kingstone\\floatingcontrolsbar.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{98D78EDC-F3AB-4D95-8656-120A00950F26}|Kingstone\\Kingstone.csproj|solutionrelative:kingstone\\floatingcontrolsbar.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{98D78EDC-F3AB-4D95-8656-120A00950F26}|Kingstone\\Kingstone.csproj|e:\\projects\\kingstone\\kingstone\\utils\\comportqueuemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -66,8 +66,44 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 1,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "CompleteKeyInterceptor.cs",
+              "DocumentMoniker": "E:\\Projects\\Kingstone\\Kingstone\\utils\\CompleteKeyInterceptor.cs",
+              "RelativeDocumentMoniker": "Kingstone\\utils\\CompleteKeyInterceptor.cs",
+              "ToolTip": "E:\\Projects\\Kingstone\\Kingstone\\utils\\CompleteKeyInterceptor.cs",
+              "RelativeToolTip": "Kingstone\\utils\\CompleteKeyInterceptor.cs",
+              "ViewState": "AgIAAFkAAAAAAAAAAAAIwG8AAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-18T20:11:20.221Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "CameraVideoDisplay.cs",
+              "DocumentMoniker": "E:\\Projects\\Kingstone\\Kingstone\\utils\\CameraVideoDisplay.cs",
+              "RelativeDocumentMoniker": "Kingstone\\utils\\CameraVideoDisplay.cs",
+              "ToolTip": "E:\\Projects\\Kingstone\\Kingstone\\utils\\CameraVideoDisplay.cs",
+              "RelativeToolTip": "Kingstone\\utils\\CameraVideoDisplay.cs",
+              "ViewState": "AgIAAOYAAAAAAAAAAAAcwPIAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-18T21:57:08.43Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "MainWindow.xaml",
+              "DocumentMoniker": "E:\\Projects\\Kingstone\\Kingstone\\MainWindow.xaml",
+              "RelativeDocumentMoniker": "Kingstone\\MainWindow.xaml",
+              "ToolTip": "E:\\Projects\\Kingstone\\Kingstone\\MainWindow.xaml",
+              "RelativeToolTip": "Kingstone\\MainWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-09-18T20:27:16.373Z"
+            },
             {
               "$type": "Document",
               "DocumentIndex": 8,
@@ -77,20 +113,45 @@
               "ToolTip": "E:\\Projects\\Kingstone\\Kingstone\\FloatingControlsBar.xaml",
               "RelativeToolTip": "Kingstone\\FloatingControlsBar.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-09-18T19:52:24.314Z",
+              "WhenOpened": "2025-09-18T19:52:24.314Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "CompleteInputInterceptor.cs",
+              "DocumentMoniker": "E:\\Projects\\Kingstone\\Kingstone\\utils\\CompleteInputInterceptor.cs",
+              "RelativeDocumentMoniker": "Kingstone\\utils\\CompleteInputInterceptor.cs",
+              "ToolTip": "E:\\Projects\\Kingstone\\Kingstone\\utils\\CompleteInputInterceptor.cs",
+              "RelativeToolTip": "Kingstone\\utils\\CompleteInputInterceptor.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-18T13:42:01.059Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "FloatingControlsBar.xaml.cs",
+              "DocumentMoniker": "E:\\Projects\\Kingstone\\Kingstone\\FloatingControlsBar.xaml.cs",
+              "RelativeDocumentMoniker": "Kingstone\\FloatingControlsBar.xaml.cs",
+              "ToolTip": "E:\\Projects\\Kingstone\\Kingstone\\FloatingControlsBar.xaml.cs",
+              "RelativeToolTip": "Kingstone\\FloatingControlsBar.xaml.cs",
+              "ViewState": "AgIAACoAAAAAAAAAAAAmwFcAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-18T19:55:43.641Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "ComPortHelper.cs",
-              "DocumentMoniker": "E:\\Projects\\Kingstone\\Kingstone\\utils\\ComPortHelper.cs",
-              "RelativeDocumentMoniker": "Kingstone\\utils\\ComPortHelper.cs",
-              "ToolTip": "E:\\Projects\\Kingstone\\Kingstone\\utils\\ComPortHelper.cs",
-              "RelativeToolTip": "Kingstone\\utils\\ComPortHelper.cs",
-              "ViewState": "AgIAADEAAAAAAAAAAAAwwDEAAAAuAAAAAAAAAA==",
+              "DocumentIndex": 1,
+              "Title": "MainWindow.xaml.cs",
+              "DocumentMoniker": "E:\\Projects\\Kingstone\\Kingstone\\MainWindow.xaml.cs",
+              "RelativeDocumentMoniker": "Kingstone\\MainWindow.xaml.cs",
+              "ToolTip": "E:\\Projects\\Kingstone\\Kingstone\\MainWindow.xaml.cs",
+              "RelativeToolTip": "Kingstone\\MainWindow.xaml.cs",
+              "ViewState": "AgIAABQAAAAAAAAAAAAiwCYAAAAyAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-18T12:28:39.084Z"
+              "WhenOpened": "2025-09-18T12:03:48.245Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -106,80 +167,15 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "MainWindow.xaml.cs",
-              "DocumentMoniker": "E:\\Projects\\Kingstone\\Kingstone\\MainWindow.xaml.cs",
-              "RelativeDocumentMoniker": "Kingstone\\MainWindow.xaml.cs",
-              "ToolTip": "E:\\Projects\\Kingstone\\Kingstone\\MainWindow.xaml.cs",
-              "RelativeToolTip": "Kingstone\\MainWindow.xaml.cs",
-              "ViewState": "AgIAAM0AAAAAAAAAAAAswOYAAAAfAAAAAAAAAA==",
+              "DocumentIndex": 11,
+              "Title": "ComPortHelper.cs",
+              "DocumentMoniker": "E:\\Projects\\Kingstone\\Kingstone\\utils\\ComPortHelper.cs",
+              "RelativeDocumentMoniker": "Kingstone\\utils\\ComPortHelper.cs",
+              "ToolTip": "E:\\Projects\\Kingstone\\Kingstone\\utils\\ComPortHelper.cs",
+              "RelativeToolTip": "Kingstone\\utils\\ComPortHelper.cs",
+              "ViewState": "AgIAADEAAAAAAAAAAAAwwDEAAAAuAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-18T12:03:48.245Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "CompleteKeyInterceptor.cs",
-              "DocumentMoniker": "E:\\Projects\\Kingstone\\Kingstone\\utils\\CompleteKeyInterceptor.cs",
-              "RelativeDocumentMoniker": "Kingstone\\utils\\CompleteKeyInterceptor.cs",
-              "ToolTip": "E:\\Projects\\Kingstone\\Kingstone\\utils\\CompleteKeyInterceptor.cs",
-              "RelativeToolTip": "Kingstone\\utils\\CompleteKeyInterceptor.cs",
-              "ViewState": "AgIAAFgAAAAAAAAAAAA0wHAAAAAaAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-18T20:11:20.221Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "CameraVideoDisplay.cs",
-              "DocumentMoniker": "E:\\Projects\\Kingstone\\Kingstone\\utils\\CameraVideoDisplay.cs",
-              "RelativeDocumentMoniker": "Kingstone\\utils\\CameraVideoDisplay.cs",
-              "ToolTip": "E:\\Projects\\Kingstone\\Kingstone\\utils\\CameraVideoDisplay.cs",
-              "RelativeToolTip": "Kingstone\\utils\\CameraVideoDisplay.cs",
-              "ViewState": "AgIAAI8AAAAAAAAAAAAmwKEAAAA1AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-18T21:57:08.43Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "MainWindow.xaml",
-              "DocumentMoniker": "E:\\Projects\\Kingstone\\Kingstone\\MainWindow.xaml",
-              "RelativeDocumentMoniker": "Kingstone\\MainWindow.xaml",
-              "ToolTip": "E:\\Projects\\Kingstone\\Kingstone\\MainWindow.xaml",
-              "RelativeToolTip": "Kingstone\\MainWindow.xaml",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-09-18T20:27:16.373Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "CompleteInputInterceptor.cs",
-              "DocumentMoniker": "E:\\Projects\\Kingstone\\Kingstone\\utils\\CompleteInputInterceptor.cs",
-              "RelativeDocumentMoniker": "Kingstone\\utils\\CompleteInputInterceptor.cs",
-              "ToolTip": "E:\\Projects\\Kingstone\\Kingstone\\utils\\CompleteInputInterceptor.cs",
-              "RelativeToolTip": "Kingstone\\utils\\CompleteInputInterceptor.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAArAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-18T13:42:01.059Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "FloatingControlsBar.xaml.cs",
-              "DocumentMoniker": "E:\\Projects\\Kingstone\\Kingstone\\FloatingControlsBar.xaml.cs",
-              "RelativeDocumentMoniker": "Kingstone\\FloatingControlsBar.xaml.cs",
-              "ToolTip": "E:\\Projects\\Kingstone\\Kingstone\\FloatingControlsBar.xaml.cs",
-              "RelativeToolTip": "Kingstone\\FloatingControlsBar.xaml.cs",
-              "ViewState": "AgIAAG8AAAAAAAAAAADgv4MAAAAUAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-18T19:55:43.641Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-18T12:28:39.084Z"
             },
             {
               "$type": "Document",
@@ -191,21 +187,19 @@
               "RelativeToolTip": "Kingstone\\utils\\ComPortQueueManager.cs",
               "ViewState": "AgIAAB4AAAAAAAAAAAAnwDAAAAAUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-18T19:59:38.465Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-18T19:59:38.465Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "Kingstone",
+              "DocumentIndex": 6,
+              "Title": "Kingstone.csproj",
               "DocumentMoniker": "E:\\Projects\\Kingstone\\Kingstone\\Kingstone.csproj",
               "RelativeDocumentMoniker": "Kingstone\\Kingstone.csproj",
               "ToolTip": "E:\\Projects\\Kingstone\\Kingstone\\Kingstone.csproj",
               "RelativeToolTip": "Kingstone\\Kingstone.csproj",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2025-09-18T21:35:43.493Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-18T21:35:43.493Z"
             },
             {
               "$type": "Document",
@@ -240,8 +234,7 @@
               "ToolTip": "E:\\Projects\\Kingstone\\Kingstone\\App.xaml",
               "RelativeToolTip": "Kingstone\\App.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-09-18T10:28:49.414Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-18T10:28:49.414Z"
             }
           ]
         }

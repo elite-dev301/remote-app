@@ -167,6 +167,11 @@ public class CameraVideoDisplay
             // Update UI on main thread
             dispatcher.BeginInvoke(new Action(() =>
             {
+                if (imageControl.Source is BitmapImage oldImage)
+                {
+                    oldImage.StreamSource?.Dispose();
+                }
+
                 imageControl.Source = bitmapImage;
                 ResolutionChanged?.Invoke(this, new System.Drawing.Size(bitmap.Width, bitmap.Height));
             }));
@@ -192,20 +197,18 @@ public class CameraVideoDisplay
 
     private BitmapImage BitmapToImageSource(Bitmap bitmap)
     {
-        using (var memory = new MemoryStream())
-        {
-            bitmap.Save(memory, ImageFormat.Bmp);
-            memory.Position = 0;
+        var memory = new MemoryStream();
+        bitmap.Save(memory, ImageFormat.Bmp);
+        memory.Position = 0;
 
-            var bitmapimage = new BitmapImage();
-            bitmapimage.BeginInit();
-            bitmapimage.StreamSource = memory;
-            bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
-            bitmapimage.EndInit();
-            bitmapimage.Freeze();
+        var bitmapimage = new BitmapImage();
+        bitmapimage.BeginInit();
+        bitmapimage.StreamSource = memory;
+        bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
+        bitmapimage.EndInit();
+        bitmapimage.Freeze();
 
-            return bitmapimage;
-        }
+        return bitmapimage;
     }
 
     public bool IsRecording => isRecording;
