@@ -170,7 +170,7 @@ namespace Kingstone
 
         private void OnCameraSelected(object sender, CameraSelectionEventArgs e)
         {
-            cameraDisplay.StartCamera(e.Camera.MonikerString);
+            Task.Run(() => cameraDisplay.StartCamera(e.Camera.Index));
         }
 
         private void OnStartStopToggled(object sender, bool shouldStart)

@@ -1,11 +1,12 @@
-﻿using AForge.Video;
-using AForge.Video.DirectShow;
+﻿using OpenCvSharp;
+using OpenCvSharp.WpfExtensions;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Management;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -14,19 +15,20 @@ using System.Windows.Threading;
 
 public class CameraVideoDisplay
 {
-    private FilterInfoCollection videoDevices;
-    private VideoCaptureDevice videoSource;
     private System.Windows.Controls.Image imageControl;
-    private bool isRecording = false;
+    private VideoCapture _capture;
     private Dispatcher dispatcher;
 
+    private Thread _cameraThread;
+    private volatile bool _isCapturing;
+
     public event EventHandler<string> StatusChanged;
-    public event EventHandler<System.Drawing.Size> ResolutionChanged;
+
 
     public class CameraDevice
     {
         public string Name { get; set; }
-        public string MonikerString { get; set; }
+        public int Index { get; set; }
         public override string ToString() => Name;
     }
 
@@ -53,15 +55,19 @@ public class CameraVideoDisplay
 
         try
         {
-            videoDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
-
-            foreach (FilterInfo device in videoDevices)
+            var cameraNames = new List<string>();
+            // Use ManagementObjectSearcher to find devices with PNPClass "Image" or "Camera"
+            using (var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_PnPEntity WHERE (PNPClass = 'Image' OR PNPClass = 'Camera')"))
             {
-                cameras.Add(new CameraDevice
+                int i = 0;
+                foreach (var device in searcher.Get())
                 {
-                    Name = device.Name,
-                    MonikerString = device.MonikerString
-                });
+                    cameras.Add(new CameraDevice
+                    {
+                        Name = device["Caption"].ToString() ?? "No Name",
+                        Index = i ++
+                    });
+                }
             }
         }
         catch (Exception ex)
@@ -72,56 +78,26 @@ public class CameraVideoDisplay
         return cameras;
     }
 
-    public List<VideoCapability> GetCameraCapabilities(string monikerString)
-    {
-        var capabilities = new List<VideoCapability>();
-
-        try
-        {
-            var device = new VideoCaptureDevice(monikerString);
-
-            foreach (VideoCapabilities capability in device.VideoCapabilities)
-            {
-                capabilities.Add(new VideoCapability
-                {
-                    FrameSize = capability.FrameSize,
-                    FrameRate = capability.AverageFrameRate
-                });
-            }
-        }
-        catch (Exception ex)
-        {
-            StatusChanged?.Invoke(this, $"Error getting capabilities: {ex.Message}");
-        }
-
-        return capabilities;
-    }
-
-    public void StartCamera(string monikerString, System.Drawing.Size? resolution = null)
+    public void StartCamera(int index)
     {
         try
         {
+
+            StatusChanged?.Invoke(this, "Camera starting");
+
             StopCamera();
 
-            videoSource = new VideoCaptureDevice(monikerString);
+            _capture = new VideoCapture(index);
 
-            // Set resolution if specified
-            if (resolution.HasValue)
+            _capture.Set(VideoCaptureProperties.FrameWidth, 1920);
+            _capture.Set(VideoCaptureProperties.FrameHeight, 1080);
+
+            _isCapturing = true;
+            _cameraThread = new Thread(ProcessCameraFrames)
             {
-                var capability = videoSource.VideoCapabilities
-                    .FirstOrDefault(c => c.FrameSize == resolution.Value);
-
-                if (capability != null)
-                {
-                    videoSource.VideoResolution = capability;
-                }
-            }
-
-            videoSource.NewFrame += OnNewFrame;
-            videoSource.VideoSourceError += OnVideoSourceError;
-
-            videoSource.Start();
-            isRecording = true;
+                IsBackground = true
+            };
+            _cameraThread.Start();
 
             StatusChanged?.Invoke(this, "Camera started");
         }
@@ -131,113 +107,43 @@ public class CameraVideoDisplay
         }
     }
 
+    private void ProcessCameraFrames()
+    {
+        using (var frame = new Mat())
+        {
+            while (_isCapturing)
+            {
+                _capture.Read(frame);
+                if (frame.Empty())
+                {
+                    continue;
+                }
+
+                // Convert the frame to a WriteableBitmap on the UI thread
+                dispatcher.Invoke(() =>
+                {
+                    try
+                    {
+                        imageControl.Source = frame.ToWriteableBitmap();
+                    }
+                    catch
+                    {
+                        // Ignore any exceptions during conversion
+                    }
+                });
+
+                // Add a small delay to control the frame rate
+                Thread.Sleep(30);
+            }
+        }
+    }
+
     public void StopCamera()
     {
-        try
-        {
-            if (videoSource != null && videoSource.IsRunning)
-            {
-                videoSource.SignalToStop();
-                videoSource.WaitForStop();
-
-                videoSource.NewFrame -= OnNewFrame;
-                videoSource.VideoSourceError -= OnVideoSourceError;
-                videoSource = null;
-            }
-
-            isRecording = false;
-            StatusChanged?.Invoke(this, "Camera stopped");
-        }
-        catch (Exception ex)
-        {
-            StatusChanged?.Invoke(this, $"Error stopping camera: {ex.Message}");
-        }
-    }
-
-    private void OnNewFrame(object sender, NewFrameEventArgs eventArgs)
-    {
-        try
-        {
-            // Clone the frame to avoid disposal issues
-            var bitmap = new Bitmap(eventArgs.Frame);
-
-            // Convert to WPF-compatible format
-            var bitmapImage = BitmapToImageSource(bitmap);
-
-            // Update UI on main thread
-            dispatcher.BeginInvoke(new Action(() =>
-            {
-                if (imageControl.Source is BitmapImage oldImage)
-                {
-                    oldImage.StreamSource?.Dispose();
-                }
-
-                imageControl.Source = bitmapImage;
-                ResolutionChanged?.Invoke(this, new System.Drawing.Size(bitmap.Width, bitmap.Height));
-            }));
-
-            bitmap.Dispose();
-        }
-        catch (Exception ex)
-        {
-            dispatcher.BeginInvoke(new Action(() =>
-            {
-                StatusChanged?.Invoke(this, $"Frame processing error: {ex.Message}");
-            }));
-        }
-    }
-
-    private void OnVideoSourceError(object sender, VideoSourceErrorEventArgs eventArgs)
-    {
-        dispatcher.BeginInvoke(new Action(() =>
-        {
-            StatusChanged?.Invoke(this, $"Video source error: {eventArgs.Description}");
-        }));
-    }
-
-    private BitmapImage BitmapToImageSource(Bitmap bitmap)
-    {
-        var memory = new MemoryStream();
-        bitmap.Save(memory, ImageFormat.Bmp);
-        memory.Position = 0;
-
-        var bitmapimage = new BitmapImage();
-        bitmapimage.BeginInit();
-        bitmapimage.StreamSource = memory;
-        bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
-        bitmapimage.EndInit();
-        bitmapimage.Freeze();
-
-        return bitmapimage;
-    }
-
-    public bool IsRecording => isRecording;
-
-    public void SetScalingMode(Stretch stretchMode)
-    {
-        imageControl.Stretch = stretchMode;
-    }
-
-    public void TakeSnapshot(string filePath)
-    {
-        try
-        {
-            if (imageControl.Source is BitmapSource bitmapSource)
-            {
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    var encoder = new PngBitmapEncoder();
-                    encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
-                    encoder.Save(fileStream);
-                }
-
-                StatusChanged?.Invoke(this, $"Snapshot saved: {filePath}");
-            }
-        }
-        catch (Exception ex)
-        {
-            StatusChanged?.Invoke(this, $"Snapshot error: {ex.Message}");
-        }
+        _isCapturing = false;
+        _cameraThread?.Join(10);
+        _capture?.Release();
+        _capture?.Dispose();
     }
 
     public void Dispose()

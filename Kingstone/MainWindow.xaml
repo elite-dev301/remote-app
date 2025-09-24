@@ -19,6 +19,7 @@
         <Cursor x:Key="CustomCursor">Resources/mini_normal.cur</Cursor>
     </Window.Resources>
     <Grid>
+
         <!-- Full-window camera display -->
         <Image x:Name="CameraImage" 
                Stretch="Uniform"  Cursor="{StaticResource CustomCursor}"
