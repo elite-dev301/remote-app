@@ -57,14 +57,14 @@ public class CameraVideoDisplay
         {
             var cameraNames = new List<string>();
             // Use ManagementObjectSearcher to find devices with PNPClass "Image" or "Camera"
-            using (var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_PnPEntity WHERE (PNPClass = 'Image' OR PNPClass = 'Camera')"))
+            using (var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_PnPEntity WHERE (PNPClass = 'Camera')"))
             {
                 int i = 0;
                 foreach (var device in searcher.Get())
                 {
                     cameras.Add(new CameraDevice
                     {
-                        Name = device["Caption"].ToString() ?? "No Name",
+                        Name = $"Camera {i}",
                         Index = i ++
                     });
                 }
@@ -107,6 +107,7 @@ public class CameraVideoDisplay
         }
     }
 
+    private WriteableBitmap _currentBitmap;
     private void ProcessCameraFrames()
     {
         using (var frame = new Mat())
@@ -124,7 +125,10 @@ public class CameraVideoDisplay
                 {
                     try
                     {
-                        imageControl.Source = frame.ToWriteableBitmap();
+                        var oldBitmap = _currentBitmap;
+                        _currentBitmap = frame.ToWriteableBitmap();
+                        imageControl.Source = _currentBitmap;
+                        oldBitmap?.Freeze();
                     }
                     catch
                     {
@@ -141,7 +145,7 @@ public class CameraVideoDisplay
     public void StopCamera()
     {
         _isCapturing = false;
-        _cameraThread?.Join(10);
+        _cameraThread?.Join(100);
         _capture?.Release();
         _capture?.Dispose();
     }
