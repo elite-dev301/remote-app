@@ -83,11 +83,11 @@ public class CameraVideoDisplay
         try
         {
 
-            StatusChanged?.Invoke(this, "Camera starting");
+            StatusChanged?.Invoke(this, "Starting");
 
             StopCamera();
 
-            _capture = new VideoCapture(index);
+            _capture = new VideoCapture(index, VideoCaptureAPIs.MSMF);
 
             _capture.Set(VideoCaptureProperties.FrameWidth, 1920);
             _capture.Set(VideoCaptureProperties.FrameHeight, 1080);
@@ -99,7 +99,7 @@ public class CameraVideoDisplay
             };
             _cameraThread.Start();
 
-            StatusChanged?.Invoke(this, "Camera started");
+            StatusChanged?.Invoke(this, "Started");
         }
         catch (Exception ex)
         {
@@ -120,15 +120,15 @@ public class CameraVideoDisplay
                     continue;
                 }
 
+                var source = frame.ToWriteableBitmap();
+                source.Freeze();
+
                 // Convert the frame to a WriteableBitmap on the UI thread
                 dispatcher.Invoke(() =>
                 {
                     try
                     {
-                        var oldBitmap = _currentBitmap;
-                        _currentBitmap = frame.ToWriteableBitmap();
-                        imageControl.Source = _currentBitmap;
-                        oldBitmap?.Freeze();
+                        imageControl.Source = source;
                     }
                     catch
                     {
