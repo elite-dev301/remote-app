@@ -238,12 +238,20 @@ namespace Kingstone
             }
         }*/
 
-        private void OnCameraStatusChanged(object sender, string status)
+        private void OnCameraStatusChanged(object sender, CameraVideoDisplay.CameraStatus status)
         {
             Dispatcher.Invoke(() =>
             {
+                if (status == CameraVideoDisplay.CameraStatus.Starting)
+                {
+                    FloatingControls.IsEnabled = false;
+                } else if (status == CameraVideoDisplay.CameraStatus.Started)
+                {
+                    FloatingControls.IsEnabled = true;
+                }
+
                 if (!isSystemActive)
-                    FloatingControls.SetStatus($"Camera: {status}");
+                    FloatingControls.SetStatus($"Camera: {(status == CameraVideoDisplay.CameraStatus.Starting ? "Starting\nPlease wait for a few mins..." : "Started")}");
             });
         }
 

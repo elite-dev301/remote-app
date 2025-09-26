@@ -27,8 +27,23 @@ namespace Kingstone.utils
         private readonly ConcurrentQueue<ComPortMessage> messageQueue = new ConcurrentQueue<ComPortMessage>();
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
         private Task workerTask;
+        private Task jiggleTask;
         private bool isConnected = false;
         private bool disposed = false;
+
+        // Add these fields for jiggling
+        private DateTime lastMessageTime = DateTime.Now;
+        private readonly TimeSpan baseJiggleInterval = TimeSpan.FromMinutes(5);
+        private readonly object jiggleLock = new object();
+        private readonly Random random = new Random();
+
+        // Configurable jiggle settings
+        private readonly int minJiggleSeconds = 180; // 4.5 minutes
+        private readonly int maxJiggleSeconds = 360; // 5.5 minutes
+        private readonly int minMouseX = 50;
+        private readonly int maxMouseX = 400;
+        private readonly int minMouseY = 50;
+        private readonly int maxMouseY = 400;
 
         // Statistics
         private long totalMessagesSent = 0;
@@ -69,6 +84,9 @@ namespace Kingstone.utils
                 // Start background worker thread
                 workerTask = Task.Run(ProcessMessageQueue, cancellationTokenSource.Token);
 
+                // Start jiggle monitor task
+                jiggleTask = Task.Run(MonitorAndJiggle, cancellationTokenSource.Token);
+
                 StatusChanged?.Invoke(this, $"Connected to {portName}");
                 ConnectionChanged?.Invoke(this, true);
                 Console.WriteLine($"COM port connected: {portName}");
@@ -94,6 +112,7 @@ namespace Kingstone.utils
                 // Stop the worker thread
                 cancellationTokenSource?.Cancel();
                 workerTask?.Wait(2000); // Wait up to 2 seconds
+                jiggleTask?.Wait(2000);
             }
             catch (Exception ex)
             {
@@ -138,11 +157,103 @@ namespace Kingstone.utils
                 for (int i = 0; i < count; i++) { messageQueue.Enqueue(message); }
                 Interlocked.Increment(ref messagesInQueue);
                 Interlocked.Increment(ref totalMessagesQueued);
-                if (command[0] == 0x33) Console.WriteLine($"Key Code Queue: {command[4]} ({messagesInQueue})");
+
+                lock (jiggleLock)
+                {
+                    lastMessageTime = DateTime.Now;
+                }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error queuing message: {ex}");
+            }
+        }
+
+        // New jiggle monitoring task with random intervals
+        private async Task MonitorAndJiggle()
+        {
+            Console.WriteLine("Mouse jiggle monitor started");
+
+            // Generate initial random interval
+            int nextJiggleSeconds = GetRandomJiggleInterval();
+            Console.WriteLine($"Next jiggle scheduled in {nextJiggleSeconds} seconds");
+
+            while (!cancellationTokenSource.Token.IsCancellationRequested)
+            {
+                try
+                {
+                    if (!isConnected || serialPort?.IsOpen == false)
+                    {
+                        await Task.Delay(1000, cancellationTokenSource.Token);
+                        continue;
+                    }
+
+                    DateTime lastTime;
+                    lock (jiggleLock)
+                    {
+                        lastTime = lastMessageTime;
+                    }
+
+                    TimeSpan elapsed = DateTime.Now - lastTime;
+
+                    if (elapsed >= TimeSpan.FromSeconds(nextJiggleSeconds))
+                    {
+                        // Generate random mouse positions
+                        var point1 = GetRandomMousePosition();
+                        var point2 = GetRandomMousePosition();
+
+                        Console.WriteLine($"No activity for {nextJiggleSeconds} seconds - executing mouse jiggle");
+                        Console.WriteLine($"Moving to ({point1.X}, {point1.Y}) then ({point2.X}, {point2.Y})");
+
+                        // Queue jiggle movements
+                        QueueMouseEvent(MouseEvent.Move, point1);
+                        await Task.Delay(100, cancellationTokenSource.Token);
+                        QueueMouseEvent(MouseEvent.Move, point2);
+
+                        // Reset timer and generate new random interval
+                        lock (jiggleLock)
+                        {
+                            lastMessageTime = DateTime.Now;
+                        }
+
+                        nextJiggleSeconds = GetRandomJiggleInterval();
+                        Console.WriteLine($"Next jiggle scheduled in {nextJiggleSeconds} seconds");
+                    }
+
+                    // Check every 10 seconds
+                    await Task.Delay(10000, cancellationTokenSource.Token);
+                }
+                catch (OperationCanceledException)
+                {
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Jiggle monitor error: {ex}");
+                    await Task.Delay(1000, cancellationTokenSource.Token);
+                }
+            }
+
+            Console.WriteLine("Mouse jiggle monitor stopped");
+        }
+
+        // Generate random jiggle interval
+        private int GetRandomJiggleInterval()
+        {
+            lock (jiggleLock)
+            {
+                return random.Next(minJiggleSeconds, maxJiggleSeconds + 1);
+            }
+        }
+
+        // Generate random mouse position
+        private System.Windows.Point GetRandomMousePosition()
+        {
+            lock (jiggleLock)
+            {
+                int x = random.Next(minMouseX, maxMouseX + 1);
+                int y = random.Next(minMouseY, maxMouseY + 1);
+                return new System.Windows.Point(x, y);
             }
         }
 

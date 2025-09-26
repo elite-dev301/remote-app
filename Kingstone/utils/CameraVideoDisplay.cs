@@ -22,7 +22,14 @@ public class CameraVideoDisplay
     private Thread _cameraThread;
     private volatile bool _isCapturing;
 
-    public event EventHandler<string> StatusChanged;
+    public event EventHandler<CameraStatus> StatusChanged;
+
+    public enum CameraStatus
+    {
+        Error,
+        Starting,
+        Started
+    }
 
 
     public class CameraDevice
@@ -72,7 +79,7 @@ public class CameraVideoDisplay
         }
         catch (Exception ex)
         {
-            StatusChanged?.Invoke(this, $"Error getting cameras: {ex.Message}");
+            StatusChanged?.Invoke(this, CameraStatus.Error);
         }
 
         return cameras;
@@ -83,7 +90,7 @@ public class CameraVideoDisplay
         try
         {
 
-            StatusChanged?.Invoke(this, "Starting");
+            StatusChanged?.Invoke(this, CameraStatus.Starting);
 
             StopCamera();
 
@@ -99,11 +106,11 @@ public class CameraVideoDisplay
             };
             _cameraThread.Start();
 
-            StatusChanged?.Invoke(this, "Started");
+            StatusChanged?.Invoke(this, CameraStatus.Started);
         }
         catch (Exception ex)
         {
-            StatusChanged?.Invoke(this, $"Error starting camera: {ex.Message}");
+            StatusChanged?.Invoke(this, CameraStatus.Error);
         }
     }
 
