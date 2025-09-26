@@ -38,12 +38,12 @@ namespace Kingstone.utils
         private readonly Random random = new Random();
 
         // Configurable jiggle settings
-        private readonly int minJiggleSeconds = 180; // 4.5 minutes
-        private readonly int maxJiggleSeconds = 360; // 5.5 minutes
-        private readonly int minMouseX = 50;
-        private readonly int maxMouseX = 400;
-        private readonly int minMouseY = 50;
-        private readonly int maxMouseY = 400;
+        private readonly int minJiggleSeconds = 120; // 4.5 minutes
+        private readonly int maxJiggleSeconds = 180; // 5.5 minutes
+        private readonly int minMouseX = 0x1000;
+        private readonly int maxMouseX = 0x4000;
+        private readonly int minMouseY = 0x1000;
+        private readonly int maxMouseY = 0x4000;
 
         // Statistics
         private long totalMessagesSent = 0;
@@ -154,13 +154,17 @@ namespace Kingstone.utils
             try
             {
                 var message = new ComPortMessage(command, priority);
-                for (int i = 0; i < count; i++) { messageQueue.Enqueue(message); }
-                Interlocked.Increment(ref messagesInQueue);
-                Interlocked.Increment(ref totalMessagesQueued);
+
+                for (int i = 0; i < count; i++)
+                {
+                    messageQueue.Enqueue(message);
+                    Interlocked.Increment(ref messagesInQueue);
+                    Interlocked.Increment(ref totalMessagesQueued);
+                }
 
                 lock (jiggleLock)
                 {
-                    lastMessageTime = DateTime.Now;
+                    if (command[0] == 0x11) lastMessageTime = DateTime.Now;
                 }
             }
             catch (Exception ex)
@@ -195,6 +199,8 @@ namespace Kingstone.utils
                     }
 
                     TimeSpan elapsed = DateTime.Now - lastTime;
+
+                    // Console.WriteLine($"No activity for {elapsed.TotalSeconds} seconds - plan to excute mouse jiggle {nextJiggleSeconds}");
 
                     if (elapsed >= TimeSpan.FromSeconds(nextJiggleSeconds))
                     {
@@ -280,19 +286,19 @@ namespace Kingstone.utils
                     {
                         ComPortMessage[] messages = new ComPortMessage[] { mouseMessage, lastMessage };
 
-                        foreach (ComPortMessage message in messages) {
+                        foreach (ComPortMessage message in messages)
+                        {
 
                             if (message == null) continue;
 
                             // Send the message
                             await SendMessageAsync(message);
-                            Interlocked.Decrement(ref messagesInQueue);
+
+                            if (message.Command[0] != 0x11) Interlocked.Decrement(ref messagesInQueue);
                             Interlocked.Increment(ref totalMessagesSent);
 
                             // Notify message sent
                             MessageSent?.Invoke(this, message);
-
-                            Console.WriteLine($"Remain messages: {messagesInQueue}");
 
                             // Small delay to prevent overwhelming the receiving device
                             await Task.Delay(1, cancellationTokenSource.Token);

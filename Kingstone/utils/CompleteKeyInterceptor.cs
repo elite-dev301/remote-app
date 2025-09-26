@@ -187,19 +187,19 @@ public class CompleteKeyInterceptor
                 return CallNextHookEx(_hookID, nCode, wParam, lParam);
             }
 
-            Console.WriteLine($"Prev vkCode: {vkCode.ToString("X2")}");
+            // Console.WriteLine($"Prev vkCode: {vkCode.ToString("X2")}");
 
             if (VkToHidMap.TryGetValue(vkCode, out int hidCode))
             {
                 vkCode = hidCode;
-                Console.WriteLine($"HID vkCode: {vkCode.ToString("X2")}");
+                // Console.WriteLine($"HID vkCode: {vkCode.ToString("X2")}");
             } else {
                 StringBuilder asciiBuffer = new StringBuilder(2);
                 if (ToAscii(keyInfo.vkCode, keyInfo.scanCode, keyboardState, asciiBuffer, 0) == 1)
                 {
                     vkCode = (int)asciiBuffer[0];
 
-                    Console.WriteLine($"Ascii vkCode: {vkCode.ToString("X2")}");
+                    // Console.WriteLine($"Ascii vkCode: {vkCode.ToString("X2")}");
                 }
             }
 
@@ -226,7 +226,7 @@ public class CompleteKeyInterceptor
                     break;
             }
 
-            Console.WriteLine("Invoked: " + vkCode.ToString("X2"));
+            // Console.WriteLine("Invoked: " + vkCode.ToString("X2"));
 
             _instance?.KeyEvent?.Invoke(vkCode, isKeyDown, isSystemKey);
 
