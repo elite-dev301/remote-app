@@ -100,13 +100,22 @@
                 </Grid>
             </GroupBox>
 
+            <!-- Full Screen Toggle -->
+            <GroupBox Header="Display" Padding="8">
+                <Button x:Name="FullScreenButton"
+                Content="⛶ Full Screen"
+                Height="35"
+                FontSize="14"
+                Click="FullScreenButton_Click"/>
+            </GroupBox>
+
             <!-- Hotkey Send -->
             <GroupBox Header="Send Hotkey" Padding="8">
                 <StackPanel>
                     <ComboBox x:Name="HotkeyComboBox" 
                               Height="25"
-                              Margin="0,0,0,5">
-                        <ComboBoxItem Content="Ctrl+Alt+Del" Tag="8082"/>
+                              Margin="0,0,0,5" SelectedIndex="0">
+                        <ComboBoxItem Content="Ctrl+Alt+Del" Tag="CtrlAltDel"/>
                         <ComboBoxItem Content="Print Screen" Tag="PrintScreen"/>
                     </ComboBox>
                     <Button x:Name="SendHotkeyButton"

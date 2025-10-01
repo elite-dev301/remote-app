@@ -405,7 +405,21 @@ namespace Kingstone.utils
 
         public void QueueHotkey(string hotkeyType)
         {
-            // Todo: implement
+
+            if (hotkeyType == "CtrlAltDel")
+            {
+                QueueKeyboardEvent(KeyboardEvent.Down, 0x84);
+                QueueKeyboardEvent(KeyboardEvent.Down, 0x86);
+                QueueKeyboardEvent(KeyboardEvent.Down, 0xD4);
+
+                QueueKeyboardEvent(KeyboardEvent.Up, 0x84);
+                QueueKeyboardEvent(KeyboardEvent.Up, 0x86);
+                QueueKeyboardEvent(KeyboardEvent.Up, 0xD4);
+            } else if (hotkeyType == "PrintScreen")
+            {
+                QueueKeyboardEvent(KeyboardEvent.Down, 0xCE);
+                QueueKeyboardEvent(KeyboardEvent.Up, 0xCE);
+            }
         }
 
         // Clear the queue (emergency use)

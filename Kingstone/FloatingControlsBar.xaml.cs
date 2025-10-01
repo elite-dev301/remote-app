@@ -28,6 +28,7 @@ namespace Kingstone
         public event EventHandler<ResolutionEventArgs> ResolutionSet;
         public event EventHandler<string> StatusChanged;
         public event EventHandler<int> ScrollSensitivityChanged;
+        public event EventHandler<bool> SetFullScreen;
 
         private bool isStarted = false;
 
@@ -210,6 +211,19 @@ namespace Kingstone
 
             // Update status
             SetStatus($"Scroll sensitivity set to {scrollSensitivity}");
+        }
+
+        private void FullScreenButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (FullScreenButton.Content as string == "⛶ Full Screen")
+            {
+                SetFullScreen?.Invoke(this, true);
+                FullScreenButton.Content = "🗗 Exit Full Screen";
+            } else
+            {
+                SetFullScreen?.Invoke(this, false);
+                FullScreenButton.Content = "⛶ Full Screen";
+            }
         }
     }
 

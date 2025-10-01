@@ -56,6 +56,7 @@ namespace Kingstone
             FloatingControls.HotkeySendRequested += OnHotkeySendRequested;
             FloatingControls.ResolutionSet += OnResolutionSet;
             FloatingControls.ScrollSensitivityChanged += OnScrollSensitivityChanged;
+            FloatingControls.SetFullScreen += FloatingControls_SetFullScreen;
 
             // Load available cameras
             var cameras = cameraDisplay.GetAvailableCameras();
@@ -63,6 +64,29 @@ namespace Kingstone
 
             // Set initial status
             FloatingControls.SetStatus("Ready");
+        }
+
+        private void FloatingControls_SetFullScreen(object? sender, bool e)
+        {
+            var mainWindow = Window.GetWindow(this);
+            if (mainWindow != null)
+            {
+                if (!e)
+                {
+                    // Exit full screen
+                    mainWindow.WindowStyle = WindowStyle.SingleBorderWindow;
+                    mainWindow.WindowState = WindowState.Normal;
+                }
+                else
+                {
+
+                    if (mainWindow.WindowState == WindowState.Maximized) mainWindow.WindowState = WindowState.Normal;
+
+                    // Enter full screen
+                    mainWindow.WindowStyle = WindowStyle.None;
+                    mainWindow.WindowState = WindowState.Maximized;
+                }
+            }
         }
 
         private void ComPortQueueManager_MessageSent(object? sender, ComPortMessage e)
