@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Kingstone"
              mc:Ignorable="d" 
-             d:DesignHeight="850" d:DesignWidth="300">
+             d:DesignHeight="850" d:DesignWidth="300" Loaded="UserControl_Loaded">
     <Border Background="#E0F0F0F0" 
             CornerRadius="8,0,0,8"
             BorderBrush="Gray" 
@@ -61,6 +61,8 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="30"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="5"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
                     <!-- Label -->
@@ -97,6 +99,12 @@
                         <TextBlock Text="Slow" FontSize="9" Foreground="Gray" HorizontalAlignment="Left"/>
                         <TextBlock Text="Fast" FontSize="9" Foreground="Gray" HorizontalAlignment="Right"/>
                     </Grid>
+
+                    <CheckBox x:Name="ReverseScrollCheckBox"
+                              Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2"
+                              Content="Reverse Scroll Direction"
+                              VerticalAlignment="Center"
+                              Checked="ReverseScrollCheckBox_CheckedChanged" Unchecked="ReverseScrollCheckBox_CheckedChanged"/>
                 </Grid>
             </GroupBox>
 

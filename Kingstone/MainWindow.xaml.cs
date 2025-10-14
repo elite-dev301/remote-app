@@ -24,7 +24,7 @@ namespace Kingstone
         private ComPortQueueManager comPortQueueManager;
         private bool isControlsVisible = true;
         private bool isSystemActive = false;
-        private int scrollSensitive = 5;
+        private int scrollSensitive = 1;
 
         public MainWindow()
         {
@@ -57,6 +57,7 @@ namespace Kingstone
             FloatingControls.ResolutionSet += OnResolutionSet;
             FloatingControls.ScrollSensitivityChanged += OnScrollSensitivityChanged;
             FloatingControls.SetFullScreen += FloatingControls_SetFullScreen;
+            FloatingControls.ScrollReverseChanged += FloatingControls_ScrollReverseChanged;
 
             // Load available cameras
             var cameras = cameraDisplay.GetAvailableCameras();
@@ -399,13 +400,20 @@ namespace Kingstone
             comPortQueueManager.QueueMouseEvent(MouseEvent.RUp, pos);
         }
 
+        private bool scrollReverse = false;
+
+        private void FloatingControls_ScrollReverseChanged(object? sender, bool e)
+        {
+            scrollReverse = e;
+        }
+
         private void CameraImage_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             if (!isSystemActive || !comPortQueueManager.IsConnected || isControlsVisible) return;
 
             Point pos = GetRealImagePosition(e.GetPosition(CameraImage));
 
-            comPortQueueManager.QueueMouseEvent(MouseEvent.Scroll, pos, e.Delta > 0 ? scrollSensitive : -scrollSensitive);
+            comPortQueueManager.QueueMouseEvent(MouseEvent.Scroll, pos, (e.Delta > 0 ? scrollSensitive : -scrollSensitive) * (scrollReverse ? -1 : 1));
         }
     }
 }

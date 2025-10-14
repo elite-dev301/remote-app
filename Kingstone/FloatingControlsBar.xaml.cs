@@ -29,6 +29,7 @@ namespace Kingstone
         public event EventHandler<string> StatusChanged;
         public event EventHandler<int> ScrollSensitivityChanged;
         public event EventHandler<bool> SetFullScreen;
+        public event EventHandler<bool> ScrollReverseChanged;
 
         private bool isStarted = false;
 
@@ -59,10 +60,12 @@ namespace Kingstone
                 CameraComboBox.Text = Properties.Settings.Default.SelectedCamera;
             }
 
+            ReverseScrollCheckBox.IsChecked = Properties.Settings.Default.ScrollReverse;
+
             // Load scroll sensitivity
             scrollSensitivity = Properties.Settings.Default.ScrollSensitivity;
             if (scrollSensitivity < 1 || scrollSensitivity > 10)
-                scrollSensitivity = 5; // Default value
+                scrollSensitivity = 3; // Default value
 
             ScrollSensitivitySlider.Value = scrollSensitivity;
             ScrollSensitivityValue.Text = scrollSensitivity.ToString();
@@ -78,6 +81,7 @@ namespace Kingstone
             Properties.Settings.Default.SelectedComPort = ComPortComboBox.Text;
             Properties.Settings.Default.SelectedCamera = CameraComboBox.Text;
             Properties.Settings.Default.ScrollSensitivity = scrollSensitivity;
+            Properties.Settings.Default.ScrollReverse = ReverseScrollCheckBox.IsChecked!.Value;
             Properties.Settings.Default.Save();
         }
 
@@ -224,6 +228,17 @@ namespace Kingstone
                 SetFullScreen?.Invoke(this, false);
                 FullScreenButton.Content = "⛶ Full Screen";
             }
+        }
+
+        private void ReverseScrollCheckBox_CheckedChanged(object sender, RoutedEventArgs e)
+        {
+            ScrollReverseChanged?.Invoke(this, ReverseScrollCheckBox.IsChecked!.Value);
+        }
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            ScrollSensitivityChanged?.Invoke(this, scrollSensitivity);
+            ScrollReverseChanged?.Invoke(this, ReverseScrollCheckBox.IsChecked!.Value);
         }
     }
 
